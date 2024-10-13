@@ -1,25 +1,16 @@
 import { Outlet } from "react-router-dom";
 import './MainLayout.css';
 import { Link } from "react-router-dom";
+import Navbar from "../components/navbar";
+import Footer from "../components/Footer";
 
 const MainLayout = () => {
   return (
-    <div className="layout">
-      <header>
-        <nav>
-          <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About</Link></li>
-          </ul>
-        </nav>
-      </header>
-      <main>
-        <Outlet />
-      </main>
-      <footer>
-      <p>© 2024 Shaikat. All rights reserved.</p>
-      </footer>
-    </div>
+    <div>
+      <Navbar></Navbar>
+      <Outlet></Outlet>
+      <Footer></Footer>
+      </div>
   );
 };
 
