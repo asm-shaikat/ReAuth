@@ -1,16 +1,39 @@
+import { Link } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import auth from "../firebase/firebase.config";
+import { useState } from "react";
+
 const Login = () => {
+  const [LoginError, setLoginError] = useState("");
+  const [LoginSuccess, setLoginSuccess] = useState("");
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      setLoginSuccess("Successfully logged in");
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      setLoginError(errorMessage);
+    });
+  };
   return (
     <div className="flex justify-center items-center min-h-screen bg-base-200">
       <div className="w-full max-w-md shadow-2xl bg-base-100 p-8 rounded-lg">
         <h2 className="text-center text-2xl font-bold mb-6">Login</h2>
 
-        <form>
+        <form onSubmit={handleLogin}>
           <div className="form-control mb-4">
             <label className="label">
               <span className="label-text">Email</span>
             </label>
             <input
               type="email"
+              name="email"
               placeholder="Enter your email"
               className="input input-bordered w-full"
             />
@@ -22,6 +45,7 @@ const Login = () => {
             </label>
             <input
               type="password"
+              name="password"
               placeholder="Enter your password"
               className="input input-bordered w-full"
             />
@@ -42,11 +66,19 @@ const Login = () => {
         <div className="mt-4 text-center">
           <p>
             Don't have an account?{" "}
-            <a href="#" className="text-primary link link-hover">
-              Sign up
-            </a>
+            <Link className="text-primary link link-hover" to={"/signup"}>Sign up</Link>
           </p>
         </div>
+        {
+          LoginError && (
+            <div className="text-red-500 text-center mt-2">{LoginError}</div>
+          )
+        }
+        {
+          LoginSuccess && (
+            <div className="text-green-500 text-center mt-2">{LoginSuccess}</div>
+          )
+        }
       </div>
     </div>
   );
