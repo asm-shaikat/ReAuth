@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
 import auth from "../firebase/firebase.config";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const Login = () => {
   const [LoginError, setLoginError] = useState("");
   const [LoginSuccess, setLoginSuccess] = useState("");
+  const emailRef = useRef(null);
+  const [forgetPassword,setForgetPass] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -21,8 +23,22 @@ const Login = () => {
       setLoginError(errorMessage);
     });
   };
+
+  const handleForgetPass = () => {
+    const email = emailRef.current.value
+    sendPasswordResetEmail(auth, email)
+    .then(() => {
+      setForgetPass("Check your email to get your rest password");
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage);
+    });
+  };
   return (
     <div className="flex justify-center items-center min-h-screen bg-base-200">
+    
       <div className="w-full max-w-md shadow-2xl bg-base-100 p-8 rounded-lg">
         <h2 className="text-center text-2xl font-bold mb-6">Login</h2>
 
@@ -34,6 +50,7 @@ const Login = () => {
             <input
               type="email"
               name="email"
+              ref={emailRef}
               placeholder="Enter your email"
               className="input input-bordered w-full"
             />
@@ -50,7 +67,7 @@ const Login = () => {
               className="input input-bordered w-full"
             />
             <label className="label">
-              <a href="#" className="label-text-alt link link-hover">
+              <a  className="label-text-alt link link-hover" onClick={handleForgetPass }>
                 Forgot password?
               </a>
             </label>
@@ -77,6 +94,11 @@ const Login = () => {
         {
           LoginSuccess && (
             <div className="text-green-500 text-center mt-2">{LoginSuccess}</div>
+          )
+        }
+        {
+          forgetPassword && (
+            <div className="text-green-500 text-center mt-2">{forgetPassword}</div>
           )
         }
       </div>
