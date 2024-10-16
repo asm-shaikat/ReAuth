@@ -1,6 +1,18 @@
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { AuthContext } from "../Provider/AuthProvider";
+import { signOut } from "firebase/auth";
+import auth from "../firebase/firebase.config";
 
 const Navbar = () => {
+  const {LoginUserinfo} = useContext(AuthContext);
+
+  const handleLogOut = () => {
+    signOut(auth).then(() => {
+      console.log("User signed out");
+    });
+  };
+
   const navlist = <>
     <li>
       <NavLink to="/">Home</NavLink>
@@ -16,17 +28,25 @@ const Navbar = () => {
     </li>
   </>
 
-  const navRightList = <>
-    <li className="menu">
-      <NavLink
-        to="/login">LOGIN</NavLink>
-    </li>
-    <li className="
-    menu">
-      <NavLink
-        to="/signup">SIGN UP</NavLink>
-    </li>
-  </>
+  const navRightList = (
+    <>
+      <li className="menu">
+        <NavLink to="/signup">SIGN UP</NavLink>
+      </li>
+      <li className="menu">
+        {LoginUserinfo ? (
+          <span>
+            {LoginUserinfo.email}
+            <button onClick={handleLogOut}>Logout</button>
+          </span>
+        ) : (
+          <NavLink to="/login">LOGIN</NavLink>
+        )}
+      </li>
+    </>
+  );
+
+
   return (
     <div>
       <div className="navbar bg-base-100">

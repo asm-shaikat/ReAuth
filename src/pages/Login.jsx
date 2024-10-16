@@ -1,21 +1,25 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAuth, sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
 import auth from "../firebase/firebase.config";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
+import { AuthContext } from "../Provider/AuthProvider";
 
 const Login = () => {
   const [LoginError, setLoginError] = useState("");
   const [LoginSuccess, setLoginSuccess] = useState("");
   const emailRef = useRef(null);
   const [forgetPassword,setForgetPass] = useState("");
+  const {loginUser} = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    signInWithEmailAndPassword(auth, email, password)
+    loginUser(email, password)    
     .then((userCredential) => {
       setLoginSuccess("Successfully logged in");
+      navigate("/")
     })
     .catch((error) => {
       const errorCode = error.code;

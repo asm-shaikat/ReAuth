@@ -7,6 +7,8 @@ import About from "./pages/About";
 import MainLayout from "./layout/Mainlayout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import AuthProvider from "./Provider/AuthProvider";
+import Middleware from "./middleware";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -18,7 +20,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/about",
-        element: <About></About>,
+        element: <Middleware><About></About>,</Middleware> 
       },
     ],
   },
@@ -34,6 +36,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

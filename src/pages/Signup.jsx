@@ -1,11 +1,13 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import auth from "../firebase/firebase.config";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../Provider/AuthProvider";
 const Signup = () => {
     const [user, setUser] = useState("");
     const [signupError, setSignupError] = useState("");
     const [signupSuccess, setSignupSuccess] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const {createUser} = useContext(AuthContext)
 
     const handleSignupForm = (e) => {
         e.preventDefault();
@@ -24,7 +26,7 @@ const Signup = () => {
 
         setSignupError("");
 
-        createUserWithEmailAndPassword(auth, email, password)
+            createUser(email, password)
             .then((userCredential) => {
                 setUser(userCredential.user);
                 setSignupSuccess("User registration successful")
